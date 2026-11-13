@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class View extends Component
 {
-    public $catagory,$product,$prodColorSelectedQuantiy, $quantityCount=1, $productColorId;
+    public $catagory,$product,$prodColorSelectedQuantiy, $quantityCount=1, $productColorId, $selectedImageIndex = 0;
 
     public function addToWishlist($productId) 
     {
@@ -34,7 +34,12 @@ class View extends Component
             return false;
         }
     }
-    public function colorSelected($productColorId) 
+    public function selectImage($index)
+    {
+        $this->selectedImageIndex = (int) $index;
+    }
+
+    public function colorSelected($productColorId)
     {
         $this->productColorId = $productColorId;
        $productColor= $this->product->productColors()->where('id',$productColorId)->first();
@@ -107,7 +112,7 @@ class View extends Component
                     'quantity' => $this->quantityCount
                 ]);
             }
-            $this->dispatch('cartAddedUpdated');
+            $this->dispatch('cart-updated');
 
             session()->flash('message', 'Product added to cart');
             return true;
@@ -135,7 +140,7 @@ class View extends Component
                     'quantity' => $this->quantityCount
                 ]);
             }
-            $this->dispatch('CartAddedUpdated');
+            $this->dispatch('cart-updated');
 
             session()->flash('message', 'Product added to cart');
             return true;

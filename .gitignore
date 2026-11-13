@@ -16,3 +16,10 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+
+# Generated previews of logged-in pages (never commit / never serve)
+_preview_*.html
+# Design export (5 MB)
+buyora-playful-pastel-redesign.json
+public/uploads/profile/
+.phpunit.result.cache

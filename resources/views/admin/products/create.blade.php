@@ -4,12 +4,8 @@
     <div class="row">
         <div class="col-md-12">
             <div class="card shadow-lg">
-                <div class="card-header bg-primary text-white">
-                    <h3 class="mb-0">Add Product
-                        <a href="{{ url('admin/products') }}" class="btn btn-light btn-sm float-end">
-                            <i class="mdi mdi-arrow-left"></i> BACK
-                        </a>
-                    </h3>
+                <div class="card-header">
+                    <h3 class="mb-0">Add Product</h3>
                 </div>
                 <div class="card-body">
                     <!-- Display validation errors -->
@@ -98,6 +94,11 @@
                                     <label class="form-label">Description</label>
                                     <textarea name="description" class="form-control" rows="4"></textarea>
                                 </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Search keywords</label>
+                                    <input type="text" name="search_keywords" class="form-control" maxlength="500">
+                                    <small class="text-muted d-block mt-1">Comma-separated words customers might search for, e.g. mobile, phone, smartphone, android. Only used for search, never shown to customers.</small>
+                                </div>
                             </div>
 
                             <!-- SEO Tags -->
@@ -144,13 +145,6 @@
                                             <label class="form-check-label" for="trending">Trending</label>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mb-3">
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" name="status"
-                                                id="status">
-                                            <label class="form-check-label" for="status">Status</label>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
 
@@ -159,6 +153,7 @@
                                 <div class="mb-3">
                                     <label class="form-label">Upload Product Images</label>
                                     <input type="file" name="image[]" multiple class="form-control">
+                                    <small class="text-muted d-block mt-1">Hold Ctrl (Windows) or Cmd (Mac) to select multiple images at once. You can add more images later from Edit Product.</small>
                                 </div>
                             </div>
                             {{-- Color --}}

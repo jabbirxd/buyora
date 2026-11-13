@@ -50,7 +50,14 @@
                             <tr>
                                 <td>{{$catagory->id  }}</td>
                                 <td>{{$catagory->name  }}</td>
-                                <td>{{$catagory->status=='1' ? 'Hidden' : 'Visible'  }}</td>
+                                <td>
+                                    {{$catagory->status=='1' ? 'Hidden' : 'Visible'  }}
+                                    @if ($catagory->status == '1')
+                                        <button type="button" wire:click="toggleStatus({{ $catagory->id }})" wire:loading.attr="disabled" class="btn btn-outline-primary btn-sm ms-2"><i class="mdi mdi-eye"></i> Show</button>
+                                    @else
+                                        <button type="button" wire:click="toggleStatus({{ $catagory->id }})" wire:loading.attr="disabled" class="btn btn-light btn-sm ms-2"><i class="mdi mdi-eye-off"></i> Hide</button>
+                                    @endif
+                                </td>
                                 <td>
                                     <a href="{{ url('admin/catagory/'.$catagory->id.'/edit') }}" class="btn btn-success"=>Edit</a>
                                     <a href="#" wire:click="deleteCatagory({{ $catagory->id }})" data-bs-toggle="modal" data-bs-target="#deleteModal" class="btn btn-danger">Delete</a>
@@ -71,7 +78,7 @@
             </div>
 
 </div>
-@push('script')
+@push('scripts')
 <script>
     window.addEventListener('closeModal', event => {
         $('#deleteModal').modal('hide');

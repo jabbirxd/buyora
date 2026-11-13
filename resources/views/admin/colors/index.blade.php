@@ -32,10 +32,24 @@
                             <td>{{$item->id}}</td>
                             <td>{{$item->name}}</td>
                             <td>{{$item->code}}</td>
-                            <td>{{$item->status ? 'Hidden':'Visible'}}</td>
+                            <td>
+                                {{$item->status ? 'Hidden':'Visible'}}
+                                <form action="{{ url('admin/colors/' . $item->id . '/toggle-status') }}" method="POST" class="d-inline">
+                                    @csrf
+                                    @if ($item->status)
+                                        <button type="submit" class="btn btn-outline-primary btn-sm ms-2"><i class="mdi mdi-eye"></i> Show</button>
+                                    @else
+                                        <button type="submit" class="btn btn-light btn-sm ms-2"><i class="mdi mdi-eye-off"></i> Hide</button>
+                                    @endif
+                                </form>
+                            </td>
                             <td>
                                 <a href="{{url('admin/colors/' .$item->id.'/edit')}}" class="btn btn-primary btn-sm">Edit</a>
-                                <a href="{{url('admin/colors/' .$item->id.'/delete')}}" onclick="return confirm('Are You Sure. You Want To Delete This Data?')" class="btn btn-danger btn-sm">Delete</a>
+                                <form action="{{ url('admin/colors/' . $item->id . '/delete') }}" method="POST" class="d-inline" onsubmit="return confirm('Are You Sure. You Want To Delete This Data?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form>
                             </td>
                         </tr>
                         @endforeach

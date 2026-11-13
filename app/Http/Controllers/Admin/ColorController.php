@@ -21,7 +21,7 @@ class ColorController extends Controller
     public function store(ColorFormRequest $request)
     {
         $validatedData = $request->validated();
-        $validatedData['status'] = $request->has('status') ? 1 : 0;
+        $validatedData['status'] = 0; // new colours start Visible
         Color::create($validatedData);
          return redirect('admin/colors')->with('message', 'Color Added Successfully');
     }
@@ -32,9 +32,19 @@ class ColorController extends Controller
     public function update(ColorFormRequest $request,$color_id)
     {
         $validatedData = $request->validated();
-        $validatedData['status'] = $request->has('status') ? 1 : 0;
+        unset($validatedData['status']); // editing must never change Visible/Hidden
         Color::findOrFail($color_id)->update($validatedData);
         return redirect('admin/colors')->with('message', 'Color Updated Successfully');
+    }
+
+    /** One-click Visible/Hidden switch (status '1' = Hidden, '0' = Visible). */
+    public function toggleStatus($color_id)
+    {
+        $color = Color::findOrFail($color_id);
+        $color->status = $color->status == '1' ? 0 : 1;
+        $color->save();
+
+        return redirect('admin/colors')->with('message', 'Color is now ' . ($color->status == 1 ? 'Hidden' : 'Visible'));
     }
     public function destroy($color_id)  
     {

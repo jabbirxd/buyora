@@ -1,75 +1,83 @@
 <div>
-     <div class="bg-light">
+    <div class="by-page-head">
         <div class="container">
-            {{-- Flash Message --}}
+            <div class="by-breadcrumb">
+                <a href="{{ url('/') }}">Home</a>
+                <i class="fa-solid fa-chevron-right"></i>
+                <span>My Wishlist</span>
+            </div>
+            <span class="by-eyebrow">Saved for later</span>
+            <h1>My wishlist</h1>
+            <p>A little collection of things you love. Add them to your cart whenever you are ready.</p>
+        </div>
+    </div>
+
+    <section class="by-section--tight">
+        <div class="container">
             @if (session()->has('message'))
-                <div class="alert alert-success alert-dismissible fade show mb-3" role="alert">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
                     {{ session('message') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             @endif
-    
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="shopping-cart p-2">
 
-                        <div class="cart-header d-none d-sm-none d-mb-block d-lg-block">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <h4>Products</h4>
-
-                                </div>
-                                <div class="col-md-2">
-                                    <h4>Price</h4>
-                                </div>
-                               
-                                <div class="col-md-4">
-                                    <h4>Remove</h4>
-                                </div>
-                            </div>
-                        </div>
-                        @forelse($wishlist as $wishlistItem) 
+            @if (count($wishlist) > 0)
+                <div class="by-cart-list">
+                    @foreach ($wishlist as $wishlistItem)
                         @if ($wishlistItem->product)
-                        <div class="cart-item">
-                            <div class="row">
-                                <div class="col-md-6 my-auto">
-                                    <a href="{{url('collections/'.$wishlistItem->product->catagory->slug.'/'.$wishlistItem->product->slug)}}">
-                                        <label class="product-name">
-                                            <img src="{{$wishlistItem->product->productImages[0]->image}}" 
-                                            style="width: 50px; height: 50px" alt="{{$wishlistItem->product->name}}" />
-
-                                            {{$wishlistItem->product->name}}
-                                        </label>
+                            @php $img = $wishlistItem->product->productImages->first()->image ?? null; @endphp
+                            <div class="by-wishlist-item">
+                                <div class="by-cart-product">
+                                    <a href="{{ url('collections/' . $wishlistItem->product->catagory->slug . '/' . $wishlistItem->product->slug) }}">
+                                        @if ($img)
+                                            <img src="{{ asset($img) }}" class="by-cart-thumb"
+                                                alt="{{ $wishlistItem->product->name }}">
+                                        @else
+                                            <img src="{{ asset('assets/images/placeholder.png') }}" class="by-cart-thumb"
+                                                alt="{{ $wishlistItem->product->name }}">
+                                        @endif
                                     </a>
-                                </div>
-                                <div class="col-md-2 my-auto">
-                                    <label class="price">Tk {{$wishlistItem->product->selling_price}} </label>
-                                </div>
-                                
-                                <div class="col-md-4 col-12 my-auto">
-                                    <div class="remove">
-                                        <button type="button" wire:click="removeWishlistItem({{$wishlistItem->id}})" class="btn btn-danger btn-sm">
-                                            <span wire:loading.remove wire:target="removeWishlistItem({{$wishlistItem->id}})">
-
-                                                <i class="fa fa-trash"></i> Remove
-                                            </span>
-                                            <span wire:loading wire:target="removeWishlistItem({{$wishlistItem->id}})">
-                                                <i class="fa fa-trash"></i>Removing</span>
-
+                                    <div>
+                                        <a class="by-cart-name"
+                                           href="{{ url('collections/' . $wishlistItem->product->catagory->slug . '/' . $wishlistItem->product->slug) }}">
+                                            {{ $wishlistItem->product->name }}
                                         </a>
+                                        <span class="by-cart-meta">{{ $wishlistItem->product->catagory->name ?? 'Buyora' }}</span>
                                     </div>
                                 </div>
+
+                                <div class="by-cart-price">
+                                    <span class="by-cart-label">Price</span>
+                                    Tk {{ number_format($wishlistItem->product->selling_price) }}
+                                </div>
+
+                                <div class="d-flex align-items-center gap-2 justify-content-end">
+                                    <a href="{{ url('collections/' . $wishlistItem->product->catagory->slug . '/' . $wishlistItem->product->slug) }}"
+                                       class="btn btn-primary btn-sm">
+                                        View product
+                                    </a>
+                                    <button type="button" wire:click="removeWishlistItem({{ $wishlistItem->id }})"
+                                        class="by-remove-btn" aria-label="Remove {{ $wishlistItem->product->name }}">
+                                        <span wire:loading.remove wire:target="removeWishlistItem({{ $wishlistItem->id }})">
+                                            <i class="fa fa-trash"></i>
+                                        </span>
+                                        <span wire:loading wire:target="removeWishlistItem({{ $wishlistItem->id }})">
+                                            <i class="fa-solid fa-spinner fa-spin"></i>
+                                        </span>
+                                    </button>
+                                </div>
                             </div>
-                        </div> 
-                        @endif 
-                     @empty
-                        <h4>No Wishlist Added</h4>
-                        @endforelse
+                        @endif
+                    @endforeach
                 </div>
-            </div>
-
+            @else
+                <div class="by-empty">
+                    <div class="by-empty-icon"><i class="fa-regular fa-heart"></i></div>
+                    <h3>Your wishlist is waiting</h3>
+                    <p>Tap the heart on any product to save it here for later.</p>
+                    <a href="{{ url('/collections') }}" class="btn btn-primary">Find something lovely</a>
+                </div>
+            @endif
         </div>
-    </div>
-
-</div>
+    </section>
 </div>

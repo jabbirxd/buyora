@@ -39,10 +39,24 @@
                         <td>{{ $product->name }}</td>
                         <td>{{ $product->selling_price }}</td>
                         <td>{{ $product->quantity }}</td>
-                        <td>{{ $product->status == '1' ? 'Hidden' : 'Visible' }}</td>
+                        <td>
+                            {{ $product->status == '1' ? 'Hidden' : 'Visible' }}
+                            <form action="{{ url('admin/products/' . $product->id . '/toggle-status') }}" method="POST" class="d-inline">
+                                @csrf
+                                @if ($product->status == '1')
+                                    <button type="submit" class="btn btn-outline-primary btn-sm ms-2"><i class="mdi mdi-eye"></i> Show</button>
+                                @else
+                                    <button type="submit" class="btn btn-light btn-sm ms-2"><i class="mdi mdi-eye-off"></i> Hide</button>
+                                @endif
+                            </form>
+                        </td>
                         <td>
                             <a href="{{ url('admin/products/'.$product->id. '/edit') }}" class="btn btn-sm btn-success">Edit</a>
-                            <a href="{{ url('admin/products/'.$product->id. '/delete') }}" onclick="return confirm('Are You Sure,You Want To Delete This Data?')" class="btn btn-sm btn-danger">Delete</a>
+                            <form action="{{ url('admin/products/'.$product->id. '/delete') }}" method="POST" class="d-inline" onsubmit="return confirm('Are You Sure,You Want To Delete This Data?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                            </form>
                         </td>
                     </tr>
                     @empty

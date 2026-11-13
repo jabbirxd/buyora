@@ -7,11 +7,9 @@
                 <h4 class="alert alert-success mb-2">{{ session('message') }}</h4>
             @endif
             <div class="card shadow-lg">
-                <div class="card-header bg-primary text-white">
+                <div class="card-header">
                     <h3 class="mb-0">Edit Product
-                        <a href="{{ url('admin/products') }}" class="btn btn-light btn-sm float-end">
-                            <i class="mdi mdi-arrow-left"></i> BACK
-                        </a>
+                        <a href="{{ url('admin/products') }}" class="btn btn-primary btn-sm text-white float-end">Back</a>
                     </h3>
                 </div>
                 <div class="card-body">
@@ -108,6 +106,11 @@
                                     <label class="form-label">Description</label>
                                     <textarea name="description" class="form-control" rows="4">{{ $product->description }}</textarea>
                                 </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Search keywords</label>
+                                    <input type="text" name="search_keywords" class="form-control" maxlength="500" value="{{ $product->search_keywords }}">
+                                    <small class="text-muted d-block mt-1">Comma-separated words customers might search for, e.g. mobile, phone, smartphone, android. Only used for search, never shown to customers.</small>
+                                </div>
                             </div>
 
                             <!-- SEO Tags -->
@@ -149,14 +152,11 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
-                                        <label>Trending</label><br />
-                                        <input type="checkbox" name="trending"
-                                            {{ $product->trending == '1' ? 'checked' : '' }}>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label>Status</label><br />
-                                        <input type="checkbox" name="status"
-                                            {{ $product->status == '1' ? 'checked' : '' }}>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" name="trending"
+                                                id="trending" {{ $product->trending == '1' ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="trending">Trending</label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -166,6 +166,7 @@
                                 <div class="mb-3">
                                     <label class="form-label">Upload Product Images</label>
                                     <input type="file" name="image[]" multiple class="form-control">
+                                    <small class="text-muted d-block mt-1">Hold Ctrl (Windows) or Cmd (Mac) to select multiple images at once. You can add more images later from Edit Product.</small>
                                 </div>
                                 <div>
                                     @if ($product->productImages && $product->productImages->count() > 0)
@@ -174,8 +175,9 @@
                                                 <div class="col-md-1 mb-2 ">
                                                     <img src="{{ asset($image->image) }}"
                                                         style="width: 80px; height: 80px;" alt="Product Image">
-                                                    <a href="{{ url('admin/product-image/' . $image->id . '/delete') }}"
-                                                        class="d-block">Remove</a>
+                                                    {{-- No nested <form> here: this button submits the matching
+                                                         DELETE form placed AFTER the update form (see below). --}}
+                                                    <button type="submit" form="delete-image-{{ $image->id }}" class="btn btn-link text-danger p-0 border-0 d-block mt-1" style="font-size: 13px; text-decoration: underline;">Remove</button>
                                                 </div>
                                             @endforeach
                                         </div>
@@ -260,6 +262,17 @@
                             </button>
                         </div>
                     </form>
+
+                    {{-- Image delete forms live OUTSIDE the update form: HTML does not allow nested
+                         forms, and a nested one broke the Update button and made Enter send DELETE.
+                         Each "Remove" button in the Images tab targets one of these via form="...". --}}
+                    @foreach ($product->productImages as $image)
+                        <form id="delete-image-{{ $image->id }}" action="{{ url('admin/product-image/' . $image->id . '/delete') }}"
+                            method="POST" class="d-none" onsubmit="return confirm('Are you sure you want to remove this image?')">
+                            @csrf
+                            @method('DELETE')
+                        </form>
+                    @endforeach
                 </div>
             </div>
         </div>
@@ -305,9 +318,16 @@
                 var prod_color_id = $(this).val();
                 var thisClick = $(this);
 
+                if (!confirm('Are You Sure. You Want To Delete This Data?')) {
+                    return false;
+                }
+
                 $.ajax({
-                    type: "GET",
+                    type: "DELETE",
                     url: "/admin/product-color/" + prod_color_id + "/delete",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
                     success: function(response) {
                         thisClick.closest('.prod-color-tr').remove();
                         alert(response.message);

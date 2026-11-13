@@ -30,9 +30,7 @@ class ColorFormRequest extends FormRequest
                 'required',
                 'string'
             ],
-            'status'=> [
-                'nullable',
-            ],
+            // No 'status' rule: Visible/Hidden is changed only with the list's toggle button.
         ];
     }
 }

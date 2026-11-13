@@ -28,11 +28,6 @@
                 <input type="text" name="code"  class="form-control"  />
             </div>
 
-            <div class="col-md-12 mb-3">
-                <label>Status</label><br />
-                <input type="checkbox" name="status"  /> Checked = Hidden
-            </div>
-
             <div class="col-md-12 mb-3 text-end">
                 <button type="submit" class="btn btn-primary">Save</button>
             </div>

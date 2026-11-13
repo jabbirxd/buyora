@@ -29,11 +29,6 @@
                 <input type="text" value="{{$color->code}}" name="code"  class="form-control"  />
             </div>
 
-            <div class="col-md-12 mb-3">
-                <label>Status</label><br />
-                <input type="checkbox" {{$color->status ? 'Checked':''}} name="status"  /> Checked = Hidden
-            </div>
-
             <div class="col-md-12 mb-3 text-end">
                 <button type="submit" class="btn btn-primary">Update</button>
             </div>

@@ -624,11 +624,11 @@ html, body {
 /* General Container Styling */
 .login-container {
     background-color: #f0f4f8; /* Light background color for the page */
-    min-height: 100vh;
+    min-height: calc(100vh - 150px); /* Leave space for footer */
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 0 15px; /* Ensure form doesn't touch edges on small screens */
+    padding: 5rem 15px; /* Top/bottom spacing */
 }
 
 /* Card Styling */
@@ -664,7 +664,7 @@ html, body {
     border-radius: 8px;
     width: 100%;
     box-sizing: border-box;
-    margin-top: 10px;
+    margin-top: 0;
     font-size: 16px;
 }
 
@@ -792,23 +792,7 @@ html, body {
 
 
 
-   <style>
-    .carousel-inner {
-        height: 800px; /* Set the height you want */
-    }
-
-    .carousel-item img {
-        height: 100%;
-        width: 100%;
-        object-fit: cover;
-    }
-
-    .custom-carousel-content {
-        background: rgba(0, 0, 0, 0.4);
-        padding: 20px;
-        border-radius: 10px;
-    }
-</style>
+/* Carousel sizing is handled by the Buyora theme (assets/css/buyora.css). */
 
 
 

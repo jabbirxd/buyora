@@ -31,4 +31,20 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    // SSLCommerz. Defaults are the PUBLIC sandbox demo credentials (no account needed);
+    // a real .env value overrides them. Live base URL: https://securepay.sslcommerz.com
+    'sslcommerz' => [
+        'base_url' => env('SSLCOMMERZ_BASE_URL', 'https://sandbox.sslcommerz.com'),
+        'store_id' => env('SSLCOMMERZ_STORE_ID', 'testbox'),
+        'store_passwd' => env('SSLCOMMERZ_STORE_PASSWORD', 'qwerty'),
+    ],
+
+    // aamarPay. Defaults are the PUBLIC sandbox demo credentials (no account needed);
+    // a real .env value overrides them. Live base URL: https://secure.aamarpay.com
+    'aamarpay' => [
+        'base_url' => env('AAMARPAY_BASE_URL', 'https://sandbox.aamarpay.com'),
+        'store_id' => env('AAMARPAY_STORE_ID', 'aamarpaytest'),
+        'signature_key' => env('AAMARPAY_SIGNATURE_KEY', 'dbb74894e82415a2f7ff0ec3a97e4183'),
+    ],
+
 ];

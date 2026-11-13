@@ -1,3 +1,1 @@
-<div class="d-inline">
-   {{$cartCount}}
-</div>
+<span class="d-inline">{{ $cartCount }}</span>

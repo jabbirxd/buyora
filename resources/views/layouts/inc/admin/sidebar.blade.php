@@ -62,13 +62,19 @@
             </a>
         </li>
 
-        <!-- <li class="nav-item">
-            <a class="nav-link" href="{{ url('/orders') }}">
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url('admin/orders') }}">
                 <i class="mdi mdi-receipt menu-icon"></i>
                 <span class="menu-title">Orders</span>
-
             </a>
-        </li> -->
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url('admin/contact-messages') }}">
+                <i class="mdi mdi-email-outline menu-icon"></i>
+                <span class="menu-title">Messages</span>
+            </a>
+        </li>
 
        
         {{-- <li class="nav-item">
@@ -84,12 +90,7 @@
                 </ul>
             </div>
         </li> --}}
-        <li class="nav-item">
-            <a class="nav-link" href="{{url('admin/sliders')}}">
-                <i class="mdi mdi-image-filter menu-icon"></i>
-                <span class="menu-title">Home Slider</span>
-            </a>
-        </li>
+
         <li class="nav-item">
             <a class="nav-link {{ request()->is('admin/settings*') ? 'active' : '' }}" href="{{ url('admin/settings') }}">
                 <i class="mdi mdi-settings menu-icon"></i>

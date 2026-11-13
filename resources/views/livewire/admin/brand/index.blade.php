@@ -2,6 +2,9 @@
     @include('livewire.admin.brand.modal-form')
     <div class="row">
         <div class="col-md-12">
+            @if (session('message'))
+                <div class="alert alert-success">{{ session('message') }}</div>
+            @endif
             <div class="card">
                 <div class="card-header">
                     <h4>
@@ -35,7 +38,14 @@
                                 </td>
                                 <td>{{ $brand->name }}</td>
                                 <td>{{ $brand->slug }}</td>
-                                <td>{{ $brand->status=='1' ? 'hidden': 'visible' }}</td>
+                                <td>
+                                    {{ $brand->status=='1' ? 'hidden': 'visible' }}
+                                    @if ($brand->status == '1')
+                                        <button type="button" wire:click="toggleStatus({{ $brand->id }})" wire:loading.attr="disabled" class="btn btn-outline-primary btn-sm ms-2"><i class="mdi mdi-eye"></i> Show</button>
+                                    @else
+                                        <button type="button" wire:click="toggleStatus({{ $brand->id }})" wire:loading.attr="disabled" class="btn btn-light btn-sm ms-2"><i class="mdi mdi-eye-off"></i> Hide</button>
+                                    @endif
+                                </td>
                                 <td>
                                     <a href="#" wire:click="editBrand({{ $brand->id }})" data-bs-toggle="modal" data-bs-target="#updateBrandModal" class="btn btn-primary btn-sm">Edit</a>
                                     <a href="#" wire:click="deleteBrand({{ $brand->id }})" data-bs-toggle="modal" data-bs-target="#deleteBrandModal" class="btn btn-danger btn-sm">Delete</a>
@@ -57,7 +67,7 @@
         </div>
     </div>
 </div>
-@push('script')
+@push('scripts')
 <script>
     window.addEventListener('closeModal', event => {
         $('#addBrandModal').modal('hide');

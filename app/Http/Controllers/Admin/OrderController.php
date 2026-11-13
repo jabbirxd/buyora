@@ -27,4 +27,26 @@ class OrderController extends Controller
         return view('admin.orders.show', compact('order'));
     }
 
+    // Update order status
+    public function updateStatus(Request $request, $orderId)
+    {
+        $order = Order::findOrFail($orderId);
+
+        $status = $request->input('order_status') ?? $request->input('status') ?? $request->input('status_message');
+        $request->merge(['order_status' => $status]);
+
+        $request->validate([
+            'order_status' => [
+                'required',
+                'string',
+                'in:in progress,pending,processing,completed,shipped,delivered,cancelled,returned',
+            ],
+        ]);
+
+        $order->update([
+            'status_message' => $status,
+        ]);
+
+        return redirect()->back()->with('message', 'Order status updated successfully');
+    }
 }

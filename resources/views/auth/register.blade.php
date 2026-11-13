@@ -1,77 +1,85 @@
 @extends('layouts.app')
 
+@section('title', 'Create an Account — Buyora')
+
 @section('content')
-<div class="container register-container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card register-card">
-                <div class="card-header register-header">{{ __('Create an Account') }}</div>
-
-                <div class="card-body">
-                    <form method="POST" action="{{ route('register') }}" class="register-form">
-                        @csrf
-
-                        <div class="row mb-3">
-                            <label for="name" class="col-md-4 col-form-label text-md-end">{{ __('Name') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="name" type="text" class="form-control input-field @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus placeholder="Enter your name">
-
-                                @error('name')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email Address') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control input-field @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" placeholder="Enter your email">
-
-                                @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control input-field @error('password') is-invalid @enderror" name="password" required autocomplete="new-password" placeholder="Enter your password">
-
-                                @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <label for="password-confirm" class="col-md-4 col-form-label text-md-end">{{ __('Confirm Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password-confirm" type="password" class="form-control input-field" name="password_confirmation" required autocomplete="new-password" placeholder="Confirm your password">
-                            </div>
-                        </div>
-
-                        <div class="row mb-0">
-                            <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn register-btn">
-                                    {{ __('Register') }}
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+    <div class="by-auth-page">
+        <div class="by-auth-card">
+            <aside class="by-auth-aside">
+                <a class="by-brand" href="{{ url('/') }}" aria-label="Buyora home">
+                    <span class="by-brand-mark"><i class="fa-solid fa-bag-shopping"></i></span>
+                    <span class="by-brand-text">Buyora<span class="by-brand-dot">.</span></span>
+                </a>
+                <div>
+                    <h2>Join the cheerful side of shopping.</h2>
+                    <p>Create your free Buyora account and make every order a little easier.</p>
+                    <ul class="by-auth-points">
+                        <li><i class="fa-solid fa-circle-check"></i> Save your delivery details</li>
+                        <li><i class="fa-solid fa-circle-check"></i> Build a wishlist you love</li>
+                        <li><i class="fa-solid fa-circle-check"></i> Follow every order in one place</li>
+                    </ul>
                 </div>
+                <p style="font-size:.8rem;color:#5D4A63;">Everyday finds, a little more joyful.</p>
+            </aside>
+
+            <div class="by-auth-form">
+                <span class="by-eyebrow">Get started</span>
+                <h1>Create an account</h1>
+                <p>It only takes a minute — then the fun begins.</p>
+
+                <form method="POST" action="{{ route('register') }}">
+                    @csrf
+
+                    <div class="mb-3">
+                        <label for="name" class="form-label">{{ __('Name') }}</label>
+                        <input id="name" type="text" class="form-control @error('name') is-invalid @enderror"
+                            name="name" value="{{ old('name') }}" required autocomplete="name" autofocus
+                            placeholder="Enter your name">
+                        @error('name')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label">{{ __('Email Address') }}</label>
+                        <input id="email" type="email" class="form-control @error('email') is-invalid @enderror"
+                            name="email" value="{{ old('email') }}" required autocomplete="email"
+                            placeholder="you@example.com">
+                        @error('email')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password" class="form-label">{{ __('Password') }}</label>
+                        <input id="password" type="password" class="form-control @error('password') is-invalid @enderror"
+                            name="password" required autocomplete="new-password" placeholder="Create a password">
+                        @error('password')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="password-confirm" class="form-label">{{ __('Confirm Password') }}</label>
+                        <input id="password-confirm" type="password" class="form-control" name="password_confirmation"
+                            required autocomplete="new-password" placeholder="Confirm your password">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        {{ __('Register') }} <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </form>
+
+                <p class="by-auth-alt">
+                    Already have an account? <a href="{{ route('login') }}">Sign in</a>
+                </p>
             </div>
         </div>
     </div>
-</div>
 @endsection

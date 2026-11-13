@@ -1,3 +1,1 @@
-<div class="d-inline">
-    {{$wishlistCount}}
-</div>
+<span class="d-inline">{{ $wishlistCount }}</span>

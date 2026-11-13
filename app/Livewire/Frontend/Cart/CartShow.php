@@ -21,7 +21,7 @@ class CartShow extends Component
 
     if ($cartData->quantity > 1) {
         $cartData->decrement('quantity');
-        $this->dispatch('CartAddedUpdated');
+        $this->dispatch('cart-updated');
         session()->flash('message', 'Quantity updated');
     } else {
         session()->flash('message', 'Minimum quantity is 1');
@@ -47,7 +47,7 @@ class CartShow extends Component
 
         if ($productColor && $productColor->quantity > $cartData->quantity) {
             $cartData->increment('quantity');
-            $this->dispatch('CartAddedUpdated');
+            $this->dispatch('cart-updated');
             session()->flash('message', 'Quantity updated');
         } else {
             session()->flash('message', 'No more stock available');
@@ -57,7 +57,7 @@ class CartShow extends Component
         // Product without color
         if ($cartData->product->quantity > $cartData->quantity) {
             $cartData->increment('quantity');
-            $this->dispatch('CartAddedUpdated');
+            $this->dispatch('cart-updated');
             session()->flash('message', 'Quantity updated');
         } else {
             session()->flash('message', 'No more stock available');
@@ -73,7 +73,7 @@ public function removeCartItem(int $cartId)
     if($cartRemoveData)
     {
         $cartRemoveData->delete();
-        $this->dispatch('cartAddedUpdated');
+        $this->dispatch('cart-updated');
         session()->flash('message', 'Cart Removed');
         return false;
     }

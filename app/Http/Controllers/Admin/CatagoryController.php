@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 use App\Http\Requests\CatagoryFormRequest;
+use Intervention\Image\ImageManager;
 
 
 class CatagoryController extends Controller
@@ -36,7 +37,7 @@ class CatagoryController extends Controller
         $catagory->meta_title = $validatedData['meta_title'];
         $catagory->meta_keyword = $validatedData['meta_keyword'];
         $catagory->meta_description = $validatedData['meta_description'];
-        $catagory->status = $request->has('status') ? 1 : 0; // Corrected field name to match your input
+        $catagory->status = 0; // new categories start Visible; use the list's Hide/Show button to change it
     
         // Handle file upload if exists
         if ($request->hasFile('image')) {
@@ -47,10 +48,13 @@ class CatagoryController extends Controller
             $filename = time() . '.' . $ext;
 
             // Define the path
-           $path = 'uploads/catagory/';
+            $path = 'uploads/catagory/';
+            $targetDirectory = public_path($path);
+            if (!File::exists($targetDirectory)) {
+                File::makeDirectory($targetDirectory, 0755, true);
+            }
         
-            // Move the file to the desired directory
-            $file->move(public_path('uploads/catagory/'), $filename);
+            $this->processAndSaveImage($file, $targetDirectory . $filename);
         
             // Store the filename in the database
             $catagory->image = $filename;
@@ -79,7 +83,7 @@ public function update(CatagoryFormRequest $request, $catagory)
     $catagory->meta_title = $validatedData['meta_title'];
     $catagory->meta_keyword = $validatedData['meta_keyword'];
     $catagory->meta_description = $validatedData['meta_description'];
-    $catagory->status = $request->has('status') ? 1 : 0;
+    // status is deliberately not touched here: editing must never un-hide a Hidden category.
 
     if ($request->hasFile('image')) {
         $oldImagePath = public_path('uploads/catagory/' . $catagory->image);
@@ -92,7 +96,12 @@ public function update(CatagoryFormRequest $request, $catagory)
         $filename = time() . '.' . $ext;
 
         $path = 'uploads/catagory/';
-        $file->move(public_path($path), $filename);
+        $targetDirectory = public_path($path);
+        if (!File::exists($targetDirectory)) {
+            File::makeDirectory($targetDirectory, 0755, true);
+        }
+
+        $this->processAndSaveImage($file, $targetDirectory . $filename);
 
         // ✅ Save ONLY the filename in DB
         $catagory->image = $filename;
@@ -103,7 +112,11 @@ public function update(CatagoryFormRequest $request, $catagory)
     return redirect('admin/catagory')->with('message', 'Category Updated Successfully');
 }
 
-
-    
-
+    private function processAndSaveImage($file, string $destinationPath): void
+    {
+        $manager = ImageManager::gd();
+        $image = $manager->read($file);
+        $image->scale(900, 900)->pad(900, 900, '#ffffff');
+        $image->save($destinationPath);
+    }
 }

@@ -128,7 +128,7 @@ return [
 
     'cookie' => env(
         'SESSION_COOKIE',
-    Str::slug(env('APP_NAME', 'Techif Store'), '_').'_session'
+    Str::slug(env('APP_NAME', 'Buyora'), '_').'_session'
     ),
 
     /*

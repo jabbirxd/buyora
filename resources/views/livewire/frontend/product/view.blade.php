@@ -1,131 +1,134 @@
 <div>
-    <div class="py-3 py-md-5">
-
+    <div class="by-product-view">
         <div class="container">
             @if (session()->has('message'))
-                <div class="alert alert-success">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
                     {{ session('message') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             @endif
-            <div class="row">
-                <div class="col-md-5 mt-3">
-                    <div class="bg-white border">
-                        @if ($product->productImages)
-                            <img src="{{ asset($product->productImages[0]->image) }}" class="w-100" alt="Img">
+
+            <div class="by-breadcrumb">
+                <a href="{{ url('/') }}">Home</a>
+                <i class="fa-solid fa-chevron-right"></i>
+                <a href="{{ url('/collections') }}">Collections</a>
+                <i class="fa-solid fa-chevron-right"></i>
+                <a href="{{ url('/collections/' . $product->catagory->slug) }}">{{ $product->catagory->name }}</a>
+                <i class="fa-solid fa-chevron-right"></i>
+                <span>{{ $product->name }}</span>
+            </div>
+
+            <div class="row g-4 g-lg-5">
+                <div class="col-lg-5">
+                    <div class="by-gallery">
+                        @if ($product->productImages && $product->productImages->count() > 0)
+                            <img src="{{ asset(($product->productImages[$selectedImageIndex] ?? $product->productImages[0])->image) }}" alt="{{ $product->name }}">
                         @else
-                            No Image
+                            <div class="by-gallery-empty">
+                                <span><i class="fa-regular fa-image me-2"></i>No image available</span>
+                            </div>
+                        @endif
+                        @if ($product->productImages && $product->productImages->count() > 1)
+                            <div class="by-gallery-thumbs">
+                                @foreach ($product->productImages as $image)
+                                    <img src="{{ asset($image->image) }}" alt="{{ $product->name }}" wire:click="selectImage({{ $loop->index }})" class="{{ $loop->index == $selectedImageIndex ? 'is-selected' : '' }}">
+                                @endforeach
+                            </div>
                         @endif
                     </div>
                 </div>
-                <div class="col-md-7 mt-3">
-                    <div class="product-view">
-                        <h4 class="product-name">
-                            {{ $product->name }}
 
-                        </h4>
-                        <hr>
-                        <p class="product-path">
-                            Home / {{ $product->catagory->name }} / {{ $product->name }}
-                        </p>
-                        <div>
-                            <span class="selling-price">Tk {{ $product->selling_price }}</span>
+                <div class="col-lg-7">
+                    <div class="by-product-info">
+                        <span class="by-eyebrow">Buyora pick</span>
+                        <h1 class="by-product-title">{{ $product->name }}</h1>
 
-                            <span class="original-price">Tk {{ $product->original_price }}</span>
-                        </div>
-                        <div>
-                            @if ($product->productColors->count() > 0)
-                                <div class="d-flex flex-wrap gap-2">
-                                    @foreach ($product->productColors as $colorItem)
-                                        <div class="text-center">
-                                            <label
-                                                class="colorSelectionLabel d-block px-3 py-2 badge   {{ $colorItem->color->code == 'black' ? 'text-white' : 'text-dark' }}"
-                                                style="background-color: {{ $colorItem->color->code }};"
-                                                wire:click="colorSelected({{ $colorItem->id }})">
-                                                {{ $colorItem->color->name }}
-                                            </label>
-                                            <div>
-                                                {{-- <small class="text-black">({{ $colorItem->quantity }} pcs)</small> --}}
-                                                <span class="badge bg-info text-dark">Available:
-                                                    {{ $colorItem->quantity }}</span>
-                                            </div>
-                                             
-                                        </div>
-                                        
-                                    @endforeach
-                                </div>
-                                <div class="mt-1">
-                                    <span class="badge bg-success text-dark">
-                                       Total Available Color Quantity: {{ $product->productColors->sum('quantity') }}
-                                    </span>
-                                </div>
-
-
-                                <div>
-                                    @if ($prodColorSelectedQuantiy === 'outofstock')
-                                        <label class="btn-sm py-1 mt-2 text-white bg-danger">Out Of Stock</label>
-                                    @elseif($prodColorSelectedQuantiy > 0)
-                                        <label class="btn-sm py-1 mt-2 text-white bg-success">In Stock</label>
-                                    @endif
-                                </div>
-                            @else
-                                @if ($product->quantity > 0)
-                                    <label class="btn-sm py-1 mt-2 text-white bg-success">In Stock</label>
-                                @else
-                                    <label class="btn-sm py-1 mt-2 text-white bg-danger">Out Of Stock</label>
-                                @endif
+                        <div class="by-product-price-row">
+                            <span class="by-product-price">Tk {{ number_format($product->selling_price > 0 ? $product->selling_price : $product->original_price) }}</span>
+                            @if ($product->selling_price > 0 && $product->original_price > $product->selling_price)
+                                <span class="by-product-price-old">Tk {{ number_format($product->original_price) }}</span>
+                                <span class="by-chip by-chip--success">
+                                    Save {{ round((1 - $product->selling_price / $product->original_price) * 100) }}%
+                                </span>
                             @endif
                         </div>
 
-                        <div class="mt-2">
-                            <div class="mt-3">
-                                <div class="input-group" style="width: 130px; align-items: center;">
-                                    <button class="btn btn-outline-secondary" type="button"
-                                        wire:click="decrementQuantity">
-                                        <i class="fa fa-minus"></i>
-                                    </button>
-                                    <input type="text" wire:model="quantityCount" readonly
-                                        class="form-control text-center" style="background-color: #f8f9fa;">
-                                    <button class="btn btn-outline-secondary" type="button"
-                                        wire:click="incrementQuantity">
-                                        <i class="fa fa-plus"></i>
-                                    </button>
-                                </div>
-                               
+                        <div class="d-flex flex-wrap align-items-center gap-2 mt-2">
+                            @if ($product->productColors->count() > 0)
+                                @if ($prodColorSelectedQuantiy === 'outofstock')
+                                    <span class="by-chip by-chip--danger"><i class="fa-solid fa-circle-xmark"></i> Out of stock</span>
+                                @elseif($prodColorSelectedQuantiy > 0)
+                                    <span class="by-chip by-chip--success"><i class="fa-solid fa-circle-check"></i> In stock</span>
+                                @endif
+                            @else
+                                @if ($product->quantity > 0)
+                                    <span class="by-chip by-chip--success"><i class="fa-solid fa-circle-check"></i> In stock</span>
+                                @else
+                                    <span class="by-chip by-chip--danger"><i class="fa-solid fa-circle-xmark"></i> Out of stock</span>
+                                @endif
+                            @endif
+                            <span class="by-chip by-chip--muted"><i class="fa-solid fa-truck-fast"></i> Delivery in 3–5 days</span>
+                        </div>
+
+                        @if ($product->productColors->count() > 0)
+                            <span class="by-option-label">Choose a colour</span>
+                            <div class="by-color-grid">
+                                @foreach ($product->productColors as $colorItem)
+                                    <div class="by-color-option text-center">
+                                        <label
+                                            class="by-color-swatch {{ $productColorId == $colorItem->id ? 'is-selected' : '' }}"
+                                            wire:click="colorSelected({{ $colorItem->id }})"
+                                            role="button" tabindex="0">
+                                            <span class="by-color-dot" style="background-color: #{{ ltrim($colorItem->color?->code ?? 'cccccc', '#') }};"></span>
+                                            {{ $colorItem->color?->name ?? 'Default' }}
+                                        </label>
+                                        <span class="by-color-qty">{{ $colorItem->quantity }} pcs available</span>
+                                    </div>
+                                @endforeach
                             </div>
-
-
                             <div class="mt-2">
-                                <button type="button" wire:click="addToCart({{ $product->id }})" class="btn btn1">
-                                    <i class="fa fa-shopping-cart"></i> Add To Cart</button>
+                                <span class="by-chip by-chip--muted">
+                                    Total available colour quantity: {{ $product->productColors->sum('quantity') }}
+                                </span>
+                            </div>
+                        @endif
 
-                                <button type="button" wire:click="addToWishlist({{ $product->id }})"
-                                    class="btn btn1">
-                                    <i class="fa fa-heart"></i> Add To Wishlist </a>
-                            </div>
-                            <div class="mt-3">
-                                <h5 class="mb-0">Small Description</h5>
-                                <p>
-                                    {!! $product->small_description !!}
-                                </p>
-                            </div>
+                        <span class="by-option-label">Quantity</span>
+                        <div class="by-qty" role="group" aria-label="Product quantity">
+                            <button class="btn" type="button" wire:click="decrementQuantity" aria-label="Decrease quantity">
+                                <i class="fa fa-minus"></i>
+                            </button>
+                            <input type="text" wire:model="quantityCount" readonly aria-label="Quantity">
+                            <button class="btn" type="button" wire:click="incrementQuantity" aria-label="Increase quantity">
+                                <i class="fa fa-plus"></i>
+                            </button>
+                        </div>
 
+                        <div class="by-product-actions">
+                            <button type="button" wire:click="addToCart({{ $product->id }})" class="btn btn-primary">
+                                <i class="fa fa-shopping-cart"></i> Add to cart
+                            </button>
+                            <button type="button" wire:click="addToWishlist({{ $product->id }})" class="btn by-btn-soft">
+                                <i class="fa fa-heart"></i> Add to wishlist
+                            </button>
                         </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12 mt-3">
-                        <div class="card">
-                            <div class="card-header bg-white">
-                                <h4>Description</h4>
+
+                        @if ($product->small_description)
+                            <div class="by-soft-note">
+                                <i class="fa-solid fa-circle-info"></i>
+                                <div>{!! $product->small_description !!}</div>
                             </div>
-                            <div class="card-body">
-                                <p>
-                                    {!! $product->description !!}
-                                </p>
-                            </div>
-                        </div>
+                        @endif
                     </div>
                 </div>
             </div>
+
+            @if ($product->description)
+                <div class="by-desc-card">
+                    <h4><i class="fa-solid fa-align-left me-2" style="color:var(--by-rose)"></i>Description</h4>
+                    <p>{!! $product->description !!}</p>
+                </div>
+            @endif
         </div>
     </div>
+</div>

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Frontend;
 
-use App\Models\Slider;
 use App\Models\Catagory;
+use App\Models\ContactMessage;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -12,8 +12,7 @@ class FrontendController extends Controller
 {
     public function index()  
     {
-        $sliders = Slider::where('status','0')->get();
-        return view('frontend.index',compact('sliders'));
+        return view('frontend.index');
     }
 
     public function contact() 
@@ -21,7 +20,25 @@ class FrontendController extends Controller
         return view('contact');
     }
 
-     public function catagories()  
+    public function aboutUs()
+    {
+        return view('frontend.about');
+    }
+
+    public function contactStore(Request $request)
+    {
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'message' => 'required|string|max:5000',
+        ]);
+
+        ContactMessage::create($data);
+
+        return back()->with('message', 'Thank you for contacting us!');
+    }
+
+     public function catagories()
     {
         $catagories=Catagory::where('status','0')->get();
         return view('frontend.collections.catagory.index',compact('catagories'));
@@ -34,7 +51,7 @@ class FrontendController extends Controller
             
             return view('frontend.collections.products.index',compact('catagory'));
         }else{
-            return redirect()->back();
+            abort(404);
         }
         
     }
@@ -48,11 +65,11 @@ class FrontendController extends Controller
                 return view('frontend.collections.products.view',compact('product','catagory'));
 
             }else{
-                return redirect()->back();
+                abort(404);
             }
             
         }else{
-            return redirect()->back();
+            abort(404);
         }
     }
     public function thankyou()
@@ -63,7 +80,7 @@ class FrontendController extends Controller
     public function newArrivals()
     {
         // Show recent products as "New Arrivals"
-        $newProducts = Product::where('status','0')
+        $newProducts = Product::with(['productImages', 'catagory'])->where('status','0')
                         ->orderBy('created_at','desc')
                         ->paginate(24);
 
@@ -72,7 +89,47 @@ class FrontendController extends Controller
 
     public function featuredProducts()
     {
-        $featuredProducts = Product::where('is_featured', true)->where('status', '0')->get();
+        $featuredProducts = Product::with(['productImages', 'catagory'])->where('is_featured', true)->where('status', '0')->get();
         return view('frontend.collections.featured', compact('featuredProducts'));
+    }
+
+    public function trendingProducts()
+    {
+        $trendingProducts = Product::with(['productImages', 'catagory'])->where('trending', '1')->where('status', '0')->get();
+        return view('frontend.collections.trending', compact('trendingProducts'));
+    }
+
+    public function search(Request $request)
+    {
+        $searchTerm = trim((string) $request->query('q', ''));
+        if ($searchTerm === '') {
+            return redirect('/');
+        }
+
+        $words = preg_split('/\s+/', mb_strtolower($searchTerm), -1, PREG_SPLIT_NO_EMPTY);
+
+        $query = Product::with(['catagory', 'productImages'])->where('status', '0');
+
+        // Every word must appear in the product name, brand, search keywords,
+        // small description, description, or category name.
+        foreach ($words as $word) {
+            $like = '%' . addcslashes($word, '\\%_') . '%';
+            $query->where(function ($q) use ($like) {
+                $q->whereRaw('LOWER(products.name) LIKE ?', [$like])
+                  ->orWhereRaw('LOWER(products.brand) LIKE ?', [$like])
+                  ->orWhereRaw('LOWER(products.search_keywords) LIKE ?', [$like])
+                  ->orWhereRaw('LOWER(products.small_description) LIKE ?', [$like])
+                  ->orWhereRaw('LOWER(products.description) LIKE ?', [$like])
+                  ->orWhereHas('catagory', function ($c) use ($like) {
+                      $c->whereRaw('LOWER(catagories.name) LIKE ?', [$like]);
+                  });
+            });
+        }
+
+        $products = $query->orderBy('created_at', 'desc')
+                          ->paginate(12)
+                          ->withQueryString();
+
+        return view('frontend.search', compact('products', 'searchTerm'));
     }
 }

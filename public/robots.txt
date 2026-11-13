@@ -1,2 +1,7 @@
 User-agent: *
-Disallow:
+Disallow: /admin/
+Disallow: /cart
+Disallow: /checkout
+Disallow: /profile
+
+Sitemap: http://localhost/sitemap.xml

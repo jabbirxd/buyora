@@ -37,6 +37,16 @@ class Index extends Component
         $this->dispatch('closeModal');
     }
     
+    /** One-click Visible/Hidden switch (status '1' = Hidden, '0' = Visible). */
+    public function toggleStatus($catagory_id)
+    {
+        $catagory = Catagory::findOrFail($catagory_id);
+        $catagory->status = $catagory->status == '1' ? 0 : 1;
+        $catagory->save();
+
+        session()->flash('message', 'Category is now ' . ($catagory->status == 1 ? 'Hidden' : 'Visible'));
+    }
+
     public function render()
     {
         $catagories = Catagory::orderBy('id','DESC')->paginate(10);

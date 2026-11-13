@@ -17,6 +17,19 @@ class SettingController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            'website_name' => 'nullable|string|max:255',
+            'website_url' => 'nullable|url|max:255',
+            'page_title' => 'nullable|string|max:255',
+            'meta_keyword' => 'nullable|string|max:1000',
+            'meta_description' => 'nullable|string|max:1000',
+            'address' => 'nullable|string|max:1000',
+            'phone1' => 'nullable|string|max:30',
+            'phone2' => 'nullable|string|max:30',
+            'email1' => 'nullable|email|max:255',
+            'email2' => 'nullable|email|max:255',
+        ]);
+
         $setting = Setting::first();
 
         if ($setting) {
@@ -31,10 +44,6 @@ class SettingController extends Controller
                 'phone2' => $request->phone2,
                 'email1' => $request->email1,
                 'email2' => $request->email2,
-                'facebook' => $request->facebook,
-                'twitter' => $request->twitter,
-                'instagram' => $request->instagram,
-                'youtube' => $request->youtube,
             ]);
             return redirect()->back()->with('message', 'Settings Updated Successfully');
         } else {
@@ -49,10 +58,6 @@ class SettingController extends Controller
                 'phone2' => $request->phone2,
                 'email1' => $request->email1,
                 'email2' => $request->email2,
-                'facebook' => $request->facebook,
-                'twitter' => $request->twitter,
-                'instagram' => $request->instagram,
-                'youtube' => $request->youtube,
             ]);
             return redirect()->back()->with('message', 'Settings Created Successfully');
         }

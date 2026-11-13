@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 use App\Http\Requests\ProductFormRequest;
+use Intervention\Image\ImageManager;
 
 class ProductController extends Controller
 {
@@ -41,11 +42,12 @@ class ProductController extends Controller
             'brand' => $validatedData['brand'],
             'small_description' => $validatedData['small_description'],
             'description' => $validatedData['description'],
+            'search_keywords' => $validatedData['search_keywords'] ?? null,
             'original_price' => $validatedData['original_price'],
             'selling_price' => $validatedData['selling_price'],
             'quantity' => $validatedData['quantity'],
             'trending' => $request->trending== true ? '1':'0',
-            'status' =>  $request->status== true ? '1':'0',
+            'status' => '0', // new products start Visible
             'meta_title' => $validatedData['meta_title'],
             'meta_keyword' => $validatedData['meta_keyword'],
             'meta_description' => $validatedData['meta_description'],
@@ -53,13 +55,17 @@ class ProductController extends Controller
 
         ]);
         if($request->hasFile('image')){
-            $uploadPath= 'uploads/products/';
-            $i=1;
-            foreach($request->file('image')as $imageFile){
+            $uploadPath = 'uploads/products/';
+            $targetDirectory = public_path($uploadPath);
+            if (!File::exists($targetDirectory)) {
+                File::makeDirectory($targetDirectory, 0755, true);
+            }
+            $i = 1;
+            foreach($request->file('image') as $imageFile){
                 $extension = $imageFile->getClientOriginalExtension();
-                $filename= time().$i++.'.'.$extension;
-                $imageFile->move($uploadPath,$filename);
-                $finalImagePathName= $uploadPath.$filename;
+                $filename = time().$i++.'.'.$extension;
+                $this->processAndSaveImage($imageFile, $targetDirectory . $filename);
+                $finalImagePathName = $uploadPath.$filename;
                 $product->productImages()->create([
                     'product_id'=> $product->id,
                     'image'=> $finalImagePathName,
@@ -110,24 +116,29 @@ class ProductController extends Controller
             'brand' => $validatedData['brand'],
             'small_description' => $validatedData['small_description'],
             'description' => $validatedData['description'],
+            'search_keywords' => $validatedData['search_keywords'] ?? null,
             'original_price' => $validatedData['original_price'],
             'selling_price' => $validatedData['selling_price'],
             'quantity' => $validatedData['quantity'],
             'trending' => $request->trending== true ? '1':'0',
-            'status' =>  $request->status== true ? '1':'0',
+            // status is deliberately not touched here: editing must never un-hide a Hidden product.
             'meta_title' => $validatedData['meta_title'],
             'meta_keyword' => $validatedData['meta_keyword'],
             'meta_description' => $validatedData['meta_description'],
 
             ]);
             if($request->hasFile('image')){
-            $uploadPath= 'uploads/products/';
-            $i=1;
-            foreach($request->file('image')as $imageFile){
+            $uploadPath = 'uploads/products/';
+            $targetDirectory = public_path($uploadPath);
+            if (!File::exists($targetDirectory)) {
+                File::makeDirectory($targetDirectory, 0755, true);
+            }
+            $i = 1;
+            foreach($request->file('image') as $imageFile){
                 $extension = $imageFile->getClientOriginalExtension();
-                $filename= time().$i++.'.'.$extension;
-                $imageFile->move($uploadPath,$filename);
-                $finalImagePathName= $uploadPath.$filename;
+                $filename = time().$i++.'.'.$extension;
+                $this->processAndSaveImage($imageFile, $targetDirectory . $filename);
+                $finalImagePathName = $uploadPath.$filename;
                 $product->productImages()->create([
                     'product_id'=> $product->id,
                     'image'=> $finalImagePathName,
@@ -135,17 +146,15 @@ class ProductController extends Controller
             }
         }
         if($request->colors){
+            // Sync, never duplicate: update the existing row for a colour, create only new ones.
+            // (The edit form only submits colours being ADDED; colours already on the product
+            // are removed with their own Delete button, so nothing is deleted here.)
             foreach($request->colors as $key=> $color){
-                $product->productColors()->create([
-                    'product_id'=> $product->id,
-                    'color_id' => $color,
-                    'quantity'=> $request->colorquantity[$key] ?? 0
-
-                ]);
-
+                $product->productColors()->updateOrCreate(
+                    ['color_id' => $color],
+                    ['quantity'=> $request->colorquantity[$key] ?? 0]
+                );
             }
-            // dd($product->productColors()->get()->toArray());
-
         }
         return redirect('/admin/products')->with('message','Product Updated Successfully.');
 
@@ -157,7 +166,17 @@ class ProductController extends Controller
          }
     }
 
-    public function destroyImage(int $product_image_id) 
+    /** One-click Visible/Hidden switch (status '1' = Hidden, '0' = Visible). */
+    public function toggleStatus(int $product_id)
+    {
+        $product = Product::findOrFail($product_id);
+        $product->status = $product->status == '1' ? '0' : '1';
+        $product->save();
+
+        return redirect('admin/products')->with('message', 'Product is now ' . ($product->status == '1' ? 'Hidden' : 'Visible'));
+    }
+
+    public function destroyImage(int $product_image_id)
     {
         $productImage = ProductImage::findOrFail($product_image_id);
         if(File::exists($productImage->image)){
@@ -198,5 +217,13 @@ class ProductController extends Controller
         $prodColor = ProductColor::findOrFail($prod_color_id);
         $prodColor->delete();
         return response()->json(['message'=>'Product Color Deleted']);
+    }
+
+    private function processAndSaveImage($imageFile, string $destinationPath): void
+    {
+        $manager = ImageManager::gd();
+        $image = $manager->read($imageFile);
+        $image->scale(900, 900)->pad(900, 900, '#ffffff');
+        $image->save($destinationPath);
     }
 }

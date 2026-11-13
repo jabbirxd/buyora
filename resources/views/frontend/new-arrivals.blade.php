@@ -1,73 +1,81 @@
 @extends('layouts.app')
 
-@section('title', 'New Arrivals - Techif Store')
+@section('title', 'New Arrivals - Buyora')
 
 @section('content')
-<div class="py-3 py-md-5 bg-light">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <h4 class="mb-4 text-dark fw-bold">New Arrivals</h4>
+    <div class="by-page-head">
+        <div class="container">
+            <div class="by-breadcrumb">
+                <a href="{{ url('/') }}">Home</a>
+                <i class="fa-solid fa-chevron-right"></i>
+                <span>New Arrivals</span>
             </div>
-        </div>
-
-        <div class="row">
-            @forelse($newProducts as $product)
-                <div class="col-6 col-md-3 mb-4">
-                    <div class="card h-100 shadow-sm border-0 position-relative overflow-hidden hover-shadow" style="transition: all 0.3s ease; border-radius: 12px;">
-                        <!-- Product Image -->
-                        <div style="position: relative; overflow: hidden; height: 200px; background-color: #f8f9fa;">
-                            @php $img = $product->productImages->first()->image ?? null; @endphp
-                            @if($img)
-                                <img src="{{ asset($img) }}" 
-                                     class="w-100 h-100" 
-                                     style="object-fit: cover; transition: transform 0.5s ease;" 
-                                     alt="{{ $product->name }}"
-                                     onmouseover="this.style.transform='scale(1.08)'"
-                                     onmouseout="this.style.transform='scale(1)'">
-                            @else
-                                <img src="{{ asset('assets/images/placeholder.png') }}" 
-                                     class="w-100 h-100" 
-                                     style="object-fit: cover;" 
-                                     alt="{{ $product->name }}">
-                            @endif
-                            <span class="badge bg-success position-absolute top-0 start-0 m-3 px-3 py-2" style="font-size: 0.8rem; border-radius: 4px;">
-                                New
-                            </span>
-                        </div>
-                        
-                        <!-- Card Body -->
-                        <div class="card-body d-flex flex-column p-3">
-                            <h5 class="card-title text-dark mb-2 text-truncate" style="font-size: 1.05rem; font-weight: 600;" title="{{ $product->name }}">
-                                {{ $product->name }}
-                            </h5>
-                            
-                            <p class="card-text mb-3">
-                                <span class="text-primary fw-bold" style="font-size: 1.15rem;">Tk {{ number_format($product->selling_price) }}</span>
-                                @if($product->original_price > $product->selling_price)
-                                    <span class="text-muted text-decoration-line-through ms-2" style="font-size: 0.9rem;">Tk {{ number_format($product->original_price) }}</span>
-                                @endif
-                            </p>
-                            
-                            <a href="{{ url('/collections/' . $product->catagory->slug . '/' . $product->slug) }}" 
-                               class="btn btn-primary w-100 mt-auto py-2 text-uppercase fw-semibold" 
-                               style="font-size: 0.85rem; letter-spacing: 0.5px; border-radius: 8px; box-shadow: 0 4px 6px rgba(13, 110, 253, 0.15); transition: all 0.2s ease;">
-                                View Product
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            @empty
-                <div class="col-md-12">
-                    <h5 class="text-center text-muted my-5">No New Arrivals Available</h5>
-                </div>
-            @endforelse
-        </div>
-
-        <div class="d-flex justify-content-center mt-3">
-            {{ $newProducts->links() }}
+            <span class="by-eyebrow">Just landed</span>
+            <h1>New arrivals</h1>
+            <p>Fresh finds added recently — be the first to explore what’s new at Buyora.</p>
         </div>
     </div>
-</div>
-@endsection
 
+    <section class="by-section">
+        <div class="container">
+            <div class="row g-3 g-lg-4">
+                @forelse($newProducts as $product)
+                    <div class="col-6 col-md-4 col-xl-3">
+                        <article class="by-product-card">
+                            <a href="{{ url('/collections/' . $product->catagory->slug . '/' . $product->slug) }}"
+                               class="by-product-media" aria-label="{{ $product->name }}">
+                                @php $img = $product->productImages->first()->image ?? null; @endphp
+                                @if($img)
+                                    <img src="{{ asset($img) }}" alt="{{ $product->name }}" loading="lazy">
+                                @else
+                                    <img src="{{ asset('assets/images/placeholder.png') }}" alt="{{ $product->name }}" loading="lazy">
+                                @endif
+
+                                <span class="by-badge-new"><i class="fa-solid fa-star"></i> New</span>
+
+                                @if($product->selling_price > 0 && $product->original_price > $product->selling_price)
+                                    <span class="by-badge-sale">
+                                        -{{ round((1 - $product->selling_price / $product->original_price) * 100) }}%
+                                    </span>
+                                @endif
+                            </a>
+
+                            <div class="by-product-body">
+                                <div class="by-product-brand">{{ $product->catagory->name ?? 'Buyora' }}</div>
+                                <a href="{{ url('/collections/' . $product->catagory->slug . '/' . $product->slug) }}"
+                                   class="by-product-name" title="{{ $product->name }}">
+                                    {{ $product->name }}
+                                </a>
+
+                                <div class="by-price-row">
+                                    <span class="by-price">Tk {{ number_format($product->selling_price > 0 ? $product->selling_price : $product->original_price) }}</span>
+                                    @if ($product->selling_price > 0 && $product->original_price > $product->selling_price)
+                                        <span class="by-price-old">Tk {{ number_format($product->original_price) }}</span>
+                                    @endif
+                                </div>
+
+                                <a href="{{ url('/collections/' . $product->catagory->slug . '/' . $product->slug) }}"
+                                   class="btn btn-primary by-product-btn">
+                                    View product <i class="fa-solid fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </article>
+                    </div>
+                @empty
+                    <div class="col-12">
+                        <div class="by-empty">
+                            <div class="by-empty-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                            <h3>No new arrivals yet</h3>
+                            <p>New products will appear here as soon as they land.</p>
+                            <a href="{{ url('/collections') }}" class="btn btn-primary">Browse all categories</a>
+                        </div>
+                    </div>
+                @endforelse
+            </div>
+
+            <div class="d-flex justify-content-center mt-4">
+                {{ $newProducts->links() }}
+            </div>
+        </div>
+    </section>
+@endsection

@@ -7,7 +7,11 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-  <title>{{ config('app.name', 'Techif Store') }}</title>
+  <title>{{ config('app.name', 'Buyora') }}</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
      <!-- plugins:css -->
   <link rel="stylesheet" href="{{ asset('admin/vendors/mdi/css/materialdesignicons.min.css') }}">
@@ -18,6 +22,7 @@
   <!-- End plugin css for this page -->
   <!-- inject:css -->
   <link rel="stylesheet" href="{{ asset('admin/css/style.css') }}">
+  <link rel="stylesheet" href="{{ asset('assets/css/buyora-admin.css') }}">
   <!-- endinject -->
   <link rel="shortcut icon" href="{{ asset('admin/images/favicon.png') }}" />
     @livewireStyles
@@ -49,9 +54,7 @@
   <!-- Custom js for this page-->
   <script src="{{ asset('admin/js/dashboard.js') }}"></script>
   <script src="{{ asset('admin/js/data-table.js') }}"></script>
-  <script src="{{ asset('admin/js/jquery.dataTables.js') }}"></script>
-  <script src="{{ asset('admin/js/dataTables.bootstrap4.js') }}"></script>
 @livewireScripts
-@stack('script')
+@stack('scripts')
 </body>
 </html>

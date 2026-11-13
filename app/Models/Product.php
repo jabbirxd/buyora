@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Models\ProductColor;
 use App\Models\ProductImage;
 use Illuminate\Database\Eloquent\Model;
-use SebastianBergmann\CodeCoverage\Report\Xml\Unit;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Product extends Model
@@ -19,6 +18,7 @@ class Product extends Model
         'brand',
         'small_description',
         'description',
+        'search_keywords',
         'original_price',
         'selling_price',
         'quantity',

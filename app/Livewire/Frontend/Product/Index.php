@@ -4,25 +4,42 @@ namespace App\Livewire\Frontend\Product;
 
 use App\Models\Product;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class Index extends Component
 {
-    public $products, $catagory, $brandInputs=[], $priceInput;
+    use WithPagination;
+
+    protected $paginationTheme = 'bootstrap';
+
+    public $catagory, $brandInputs=[], $priceInput;
     protected $queryString = [
         'brandInputs'=> ['except' => '', 'as' => 'brand'],
         'priceInput'=> ['except' => '', 'as' => 'price'],
 ];
-    public function mount( $catagory) 
+    public function mount( $catagory)
     {
-        
+
         $this->catagory = $catagory;
-        
+
     }
+
+    // A changed filter can leave the customer on a page that no longer exists.
+    public function updatedBrandInputs()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedPriceInput()
+    {
+        $this->resetPage();
+    }
+
     // Filtering
     public function render()
     {
-        // dd($this->brandInputs); // Debugging
-        $this->products = Product::where('catagory_id', $this->catagory->id)
+        $products = Product::with(['productImages', 'catagory'])
+        ->where('catagory_id', $this->catagory->id)
         ->when($this->brandInputs,function($q){
             $q->whereIn('brand',$this->brandInputs);
         })
@@ -37,9 +54,9 @@ class Index extends Component
 
 
         ->where('status','0')
-        ->get();
+        ->paginate(12);
         return view('livewire.frontend.product.index',[
-            'products' =>$this->products,
+            'products' =>$products,
             'catagory' =>$this->catagory,
         ]);
     }

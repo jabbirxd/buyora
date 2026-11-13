@@ -6,6 +6,9 @@
             @if (session('status'))
                 <div class="alert alert-success">{{ session('status') }}</div>
             @endif
+            @if (session('error'))
+                <div class="alert alert-danger">{{ session('error') }}</div>
+            @endif
             <div class="card">
                 <div class="card-header">
                     <h3>Users List
@@ -38,12 +41,21 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-primary btn-sm">Edit</a>
-                                        <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this user?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                        </form>
+                                        <div class="d-flex align-items-center" style="gap: 8px;">
+                                            <a href="{{ route('admin.users.show', $user->id) }}" class="btn btn-primary btn-sm text-white d-inline-flex align-items-center justify-content-center" style="height: 32px; padding: 0 12px;">
+                                                <i class="mdi mdi-eye me-1"></i> View
+                                            </a>
+                                            <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-primary btn-sm d-inline-flex align-items-center justify-content-center" style="height: 32px; padding: 0 12px;">
+                                                <i class="mdi mdi-pencil me-1"></i> Edit
+                                            </a>
+                                            <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="m-0 p-0" onsubmit="return confirm('Are you sure you want to delete this user?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger btn-sm d-inline-flex align-items-center justify-content-center" style="height: 32px; padding: 0 12px;">
+                                                    <i class="mdi mdi-delete me-1"></i> Delete
+                                                </button>
+                                            </form>
+                                        </div>
                                     </td>
                                 </tr>
                             @endforeach

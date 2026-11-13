@@ -3,15 +3,16 @@
 namespace App\Livewire\Frontend\Cart;
 
 use App\Models\Cart;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 
 class CartCount extends Component
 {
     public $cartCount;
-    protected $listeners = ['cartAddedUpdated' => 'checkCartCount'];
 
     
+    #[On('cart-updated')]
     public function checkCartCount() 
     {
         if(Auth::check()){

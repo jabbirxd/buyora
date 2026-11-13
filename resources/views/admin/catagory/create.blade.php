@@ -5,9 +5,7 @@
     <div class="col-md-12"></div>
     <div class="card">
         <div class="card-header">
-            <h3>Add Category
-                <a href="{{ url('admin/catagory/create') }}" class="btn btn-primary btn-sm text-white float-end">Back</a>
-            </h3>
+            <h3>Add Category</h3>
         </div>
         <div class="card-body">
 
@@ -44,11 +42,6 @@
                     <div class="col-md-6 mb-3">
                         <label>Image</label>
                         <input type="file" name="image" class="form-control">
-                    </div>
-
-                    <div class="col-md-6 mb-3">
-                        <label>Status</label><br />
-                        <input type="checkbox" name="status" {{ old('status') ? 'checked' : '' }} />
                     </div>
 
                     <div class="col-md-12">

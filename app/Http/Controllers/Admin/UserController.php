@@ -44,6 +44,30 @@ class UserController extends Controller
     }
 
     /**
+     * Display the specified user.
+     */
+    public function show($id)
+    {
+        $user = User::findOrFail($id);
+        
+        $orders = \App\Models\Order::where('user_id', $user->id)
+                    ->with('orderItems')
+                    ->latest()
+                    ->get();
+                    
+        $totalOrders = $orders->count();
+        $totalAmountSpent = 0;
+        
+        foreach ($orders as $order) {
+            foreach ($order->orderItems as $item) {
+                $totalAmountSpent += ($item->quantity * $item->price);
+            }
+        }
+        
+        return view('admin.users.show', compact('user', 'orders', 'totalOrders', 'totalAmountSpent'));
+    }
+
+    /**
      * Show the form for editing the specified user.
      */
     public function edit($id)
@@ -65,6 +89,11 @@ class UserController extends Controller
             'roll_as' => 'required|integer|in:0,1',
         ]);
 
+        // An admin cannot demote their own account (they would lock themselves out).
+        if ((int) $user->id === (int) auth()->id() && (int) $data['roll_as'] !== 1) {
+            return back()->withInput()->withErrors(['roll_as' => 'You cannot remove admin access from your own account.']);
+        }
+
         if (!empty($data['password'])) {
             $data['password'] = Hash::make($data['password']);
         } else {
@@ -80,6 +109,12 @@ class UserController extends Controller
     public function destroy($id)
     {
         $user = User::findOrFail($id);
+
+        // An admin cannot delete their own account.
+        if ((int) $user->id === (int) auth()->id()) {
+            return redirect()->route('admin.users.index')->with('error', 'You cannot delete your own account.');
+        }
+
         $user->delete();
         return redirect()->route('admin.users.index')->with('status', 'User deleted successfully');
     }

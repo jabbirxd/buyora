@@ -48,13 +48,16 @@ class ProductFormRequest extends FormRequest
                 'required',
                 'string'
             ],
+            // min:1 — a price of 0 would let the product be bought for Tk 0 at checkout.
             'original_price'=> [
                 'required',
-                'integer'
+                'integer',
+                'min:1'
             ],
             'selling_price'=> [
                 'required',
-                'integer'
+                'integer',
+                'min:1'
             ],
             'quantity'=> [
                 'required',
@@ -63,9 +66,7 @@ class ProductFormRequest extends FormRequest
             'trending'=> [
                 'nullable'
             ],
-            'status'=> [
-                'nullable'
-            ],
+            // No 'status' rule: Visible/Hidden is changed only with the list's toggle button.
             'meta_title'=> [
                 'required',
                 'string',
@@ -79,8 +80,10 @@ class ProductFormRequest extends FormRequest
                 'required',
                 'string'
             ],
-            'images' => ['nullable', 'array'], // 'images' should be an array
-            'images.*' => ['image', 'mimes:jpeg,png,jpg', 'max:2048'], // Validate each image
+            'search_keywords' => ['nullable', 'string', 'max:500'],
+            // The form field is name="image[]" and the controller reads $request->file('image').
+            'image' => ['nullable', 'array'],
+            'image.*' => ['image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
 
         ];
     }

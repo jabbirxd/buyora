@@ -31,11 +31,6 @@
                 <input type="text" wire:model.defer="slug" class="form-control">
                 @error('slug') <small class="text-danger">{{ $message }}</small> @enderror
               </div>
-              <div class="mb-3">
-                <label>Status</label> <br/>
-                <input type="checkbox" wire:model.defer="status" /> Checked=Hidden, Un-Checked= Visible
-                @error('status') <small class="text-danger">{{ $message }}</small> @enderror
-              </div>
             </div>
             <div class="modal-footer">
               <button type="button" wire:click="closeModal" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -60,8 +55,11 @@
                 <label>Select Catagory</label>
                 <select wire:model.defer="catagory_id" required class="form-control">
                   <option value="">--Select Catagory--</option>
-                  @foreach ($catagories as $cataItem  )
-                <option value="{{$cataItem->id}}">{{ $cataItem->name }}</option>
+                  {{-- Includes this brand's current category even when it is Hidden. @selected matters:
+                       that option is added in the same Livewire update that sets catagory_id, so
+                       wire:model alone would try to select it before it exists. --}}
+                  @foreach ($updateCatagories as $cataItem  )
+                <option value="{{$cataItem->id}}" @selected($cataItem->id == $catagory_id)>{{ $cataItem->name }}{{ $cataItem->status == '1' ? ' (Hidden)' : '' }}</option>
                 @endforeach
                 </select>
                 @error('catagory_id') <small class="text-danger">{{ $message }}</small> @enderror
@@ -75,11 +73,6 @@
                 <label>Brand Slug</label>
                 <input type="text" wire:model.defer="slug" class="form-control">
                 @error('slug') <small class="text-danger">{{ $message }}</small> @enderror
-              </div>
-              <div class="mb-3">
-                <label>Status</label> <br/>
-                <input type="checkbox" wire:model.defer="status" style="width: 70px; height: auto;" /> Checked=Hidden, Un-Checked= Visible
-                @error('status') <small class="text-danger">{{ $message }}</small> @enderror
               </div>
             </div>
             <div class="modal-footer">
