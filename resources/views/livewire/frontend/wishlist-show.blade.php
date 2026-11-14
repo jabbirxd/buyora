@@ -42,7 +42,7 @@
                                            href="{{ url('collections/' . $wishlistItem->product->catagory->slug . '/' . $wishlistItem->product->slug) }}">
                                             {{ $wishlistItem->product->name }}
                                         </a>
-                                        <span class="by-cart-meta">{{ $wishlistItem->product->catagory->name ?? 'Buyora' }}</span>
+                                        <span class="by-cart-meta">{{ $wishlistItem->product->catagory->name ?? ($setting->website_name ?? 'Buyora') }}</span>
                                     </div>
                                 </div>
 

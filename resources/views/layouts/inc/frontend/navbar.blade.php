@@ -2,7 +2,7 @@
     <div class="by-topbar">
         <div class="container">
             <div class="by-topbar-inner">
-                <a class="by-brand" href="{{ url('/') }}" aria-label="Buyora home">
+                <a class="by-brand" href="{{ url('/') }}" aria-label="{{ $setting->website_name ?? 'Buyora' }} home">
                     <span class="by-brand-mark"><i class="fa-solid fa-bag-shopping"></i></span>
                     <span class="by-brand-text">{{ $setting->website_name ?? 'Buyora' }}<span class="by-brand-dot">.</span></span>
                 </a>

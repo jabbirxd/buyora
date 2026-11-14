@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Reset Password — Buyora')
+@section('title', 'Reset Password — ' . ($setting->website_name ?? 'Buyora'))
 
 @section('content')
     <div class="by-auth-page">

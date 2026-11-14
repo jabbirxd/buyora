@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Search: ' . $searchTerm . ' - Buyora')
+@section('title', 'Search: ' . $searchTerm . ' - ' . ($setting->website_name ?? 'Buyora'))
 
 @section('content')
     <div class="by-page-head">
@@ -54,7 +54,7 @@
                                 </a>
 
                                 <div class="by-product-body">
-                                    <div class="by-product-brand">{{ $productItem->catagory->name ?? 'Buyora' }}</div>
+                                    <div class="by-product-brand">{{ $productItem->catagory->name ?? ($setting->website_name ?? 'Buyora') }}</div>
                                     <a href="{{ url('/collections/' . $productItem->catagory->slug . '/' . $productItem->slug) }}"
                                        class="by-product-name" title="{{ $productItem->name }}">
                                         {{ $productItem->name }}

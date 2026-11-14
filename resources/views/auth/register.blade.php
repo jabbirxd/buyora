@@ -1,18 +1,18 @@
 @extends('layouts.app')
 
-@section('title', 'Create an Account — Buyora')
+@section('title', 'Create an Account — ' . ($setting->website_name ?? 'Buyora'))
 
 @section('content')
     <div class="by-auth-page">
         <div class="by-auth-card">
             <aside class="by-auth-aside">
-                <a class="by-brand" href="{{ url('/') }}" aria-label="Buyora home">
+                <a class="by-brand" href="{{ url('/') }}" aria-label="{{ $setting->website_name ?? 'Buyora' }} home">
                     <span class="by-brand-mark"><i class="fa-solid fa-bag-shopping"></i></span>
-                    <span class="by-brand-text">Buyora<span class="by-brand-dot">.</span></span>
+                    <span class="by-brand-text">{{ $setting->website_name ?? 'Buyora' }}<span class="by-brand-dot">.</span></span>
                 </a>
                 <div>
                     <h2>Join the cheerful side of shopping.</h2>
-                    <p>Create your free Buyora account and make every order a little easier.</p>
+                    <p>Create your free {{ $setting->website_name ?? 'Buyora' }} account and make every order a little easier.</p>
                     <ul class="by-auth-points">
                         <li><i class="fa-solid fa-circle-check"></i> Save your delivery details</li>
                         <li><i class="fa-solid fa-circle-check"></i> Build a wishlist you love</li>

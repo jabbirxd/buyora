@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Trending Now — Buyora')
+@section('title', 'Trending Now — ' . ($setting->website_name ?? 'Buyora'))
 
 @section('content')
     <div class="by-page-head">
@@ -12,7 +12,7 @@
             </div>
             <span class="by-eyebrow">Most popular picks</span>
             <h1>Trending now</h1>
-            <p>Discover what shoppers are loving right now — standout finds and popular items across Buyora.</p>
+            <p>Discover what shoppers are loving right now — standout finds and popular items across {{ $setting->website_name ?? 'Buyora' }}.</p>
         </div>
     </div>
 
@@ -41,7 +41,7 @@
                             </a>
 
                             <div class="by-product-body">
-                                <div class="by-product-brand">{{ $product->catagory->name ?? 'Buyora' }}</div>
+                                <div class="by-product-brand">{{ $product->catagory->name ?? ($setting->website_name ?? 'Buyora') }}</div>
                                 <a href="{{ url('/collections/' . $product->catagory->slug . '/' . $product->slug) }}"
                                    class="by-product-name" title="{{ $product->name }}">
                                     {{ $product->name }}

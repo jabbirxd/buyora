@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'All Categories — Buyora')
+@section('title', 'All Categories — ' . ($setting->website_name ?? 'Buyora'))
 
 @section('content')
     <div class="by-page-head">
@@ -12,7 +12,7 @@
             </div>
             <span class="by-eyebrow">Browse the marketplace</span>
             <h1>Our categories</h1>
-            <p>Find your next little joy — explore everything Buyora has to offer.</p>
+            <p>Find your next little joy — explore everything {{ $setting->website_name ?? 'Buyora' }} has to offer.</p>
         </div>
     </div>
 

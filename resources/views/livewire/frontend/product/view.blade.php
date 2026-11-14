@@ -40,7 +40,7 @@
 
                 <div class="col-lg-7">
                     <div class="by-product-info">
-                        <span class="by-eyebrow">Buyora pick</span>
+                        <span class="by-eyebrow">{{ $setting->website_name ?? 'Buyora' }} pick</span>
                         <h1 class="by-product-title">{{ $product->name }}</h1>
 
                         <div class="by-product-price-row">

@@ -1,14 +1,14 @@
 @extends('layouts.app')
 
-@section('title', 'Login — Buyora')
+@section('title', 'Login — ' . ($setting->website_name ?? 'Buyora'))
 
 @section('content')
     <div class="by-auth-page">
         <div class="by-auth-card">
             <aside class="by-auth-aside">
-                <a class="by-brand" href="{{ url('/') }}" aria-label="Buyora home">
+                <a class="by-brand" href="{{ url('/') }}" aria-label="{{ $setting->website_name ?? 'Buyora' }} home">
                     <span class="by-brand-mark"><i class="fa-solid fa-bag-shopping"></i></span>
-                    <span class="by-brand-text">Buyora<span class="by-brand-dot">.</span></span>
+                    <span class="by-brand-text">{{ $setting->website_name ?? 'Buyora' }}<span class="by-brand-dot">.</span></span>
                 </a>
                 <div>
                     <h2>Welcome back to your happy place.</h2>
@@ -24,7 +24,7 @@
 
             <div class="by-auth-form">
                 <span class="by-eyebrow">Welcome back</span>
-                <h1>Sign in to Buyora</h1>
+                <h1>Sign in to {{ $setting->website_name ?? 'Buyora' }}</h1>
                 <p>Enter your details to access your account.</p>
 
                 <form method="POST" action="{{ route('login') }}">
@@ -74,7 +74,7 @@
 
                 @if (Route::has('register'))
                     <p class="by-auth-alt">
-                        New to Buyora? <a href="{{ route('register') }}">Create an account</a>
+                        New to {{ $setting->website_name ?? 'Buyora' }}? <a href="{{ route('register') }}">Create an account</a>
                     </p>
                 @endif
             </div>

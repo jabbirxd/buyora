@@ -3,7 +3,7 @@
         <div class="container">
             <div class="row g-4 g-lg-5">
                 <div class="col-lg-4">
-                    <a class="by-brand mb-3" href="{{ url('/') }}" aria-label="Buyora home">
+                    <a class="by-brand mb-3" href="{{ url('/') }}" aria-label="{{ $setting->website_name ?? 'Buyora' }} home">
                         <span class="by-brand-mark"><i class="fa-solid fa-bag-shopping"></i></span>
                         <span class="by-brand-text">{{ $setting->website_name ?? 'Buyora' }}<span class="by-brand-dot">.</span></span>
                     </a>

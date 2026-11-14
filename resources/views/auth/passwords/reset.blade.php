@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
-@section('title', 'Choose a New Password — Buyora')
+@section('title', 'Choose a New Password — ' . ($setting->website_name ?? 'Buyora'))
 
 @section('content')
     <div class="by-auth-page">
         <div class="by-auth-simple">
             <span class="by-eyebrow">Account help</span>
             <h1>{{ __('Reset Password') }}</h1>
-            <p>Choose a fresh password for your Buyora account.</p>
+            <p>Choose a fresh password for your {{ $setting->website_name ?? 'Buyora' }} account.</p>
 
             <form method="POST" action="{{ route('password.update') }}">
                 @csrf

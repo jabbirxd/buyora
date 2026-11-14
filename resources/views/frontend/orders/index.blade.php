@@ -12,7 +12,7 @@
             </div>
             <span class="by-eyebrow">Order history</span>
             <h1>My orders</h1>
-            <p>Keep track of everything you have ordered from Buyora.</p>
+            <p>Keep track of everything you have ordered from {{ $setting->website_name ?? 'Buyora' }}.</p>
         </div>
     </div>
 

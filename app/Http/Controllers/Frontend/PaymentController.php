@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\Setting;
 use App\Services\AamarpayService;
 use App\Services\OrderPlacementService;
 use App\Services\SslcommerzService;
@@ -57,6 +58,7 @@ class PaymentController extends Controller
         }
 
         $tranId = $pending['tracking_no'];
+        $siteName = Setting::first()?->website_name ?? 'Buyora';
 
         try {
             $response = $this->sslcommerz->initiate([
@@ -81,7 +83,7 @@ class PaymentController extends Controller
                 'ship_postcode' => $pending['pincode'],
                 'ship_country' => 'Bangladesh',
                 'num_of_item' => 1,
-                'product_name' => 'Buyora order ' . $tranId,
+                'product_name' => $siteName . ' order ' . $tranId,
                 'product_category' => 'General',
                 'product_profile' => 'general',
             ]);
@@ -192,13 +194,14 @@ class PaymentController extends Controller
         }
 
         $tranId = $pending['tracking_no'];
+        $siteName = Setting::first()?->website_name ?? 'Buyora';
 
         try {
             $response = $this->aamarpay->initiate([
                 'tran_id' => $tranId,
                 'amount' => $pending['amount'],
                 'currency' => 'BDT',
-                'desc' => 'Buyora order ' . $tranId,
+                'desc' => $siteName . ' order ' . $tranId,
                 'cus_name' => $pending['fullname'],
                 'cus_email' => $pending['email'],
                 'cus_phone' => $pending['phone'],

@@ -40,7 +40,7 @@
             <div class="by-section-head by-section-head--center">
                 <span class="by-eyebrow">Good to know</span>
                 <h2>Why choose our {{ $catagory->name }} products?</h2>
-                <p>At Buyora, we make sure every product in the <strong>{{ $catagory->name }}</strong> category meets your expectations and style.</p>
+                <p>At {{ $setting->website_name ?? 'Buyora' }}, we make sure every product in the <strong>{{ $catagory->name }}</strong> category meets your expectations and style.</p>
             </div>
 
             <div class="row g-4 text-center">

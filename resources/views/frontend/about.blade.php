@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'About Us — Buyora')
+@section('title', 'About Us — ' . ($setting->website_name ?? 'Buyora'))
 
 @section('content')
     <div class="by-page-head">
@@ -11,7 +11,7 @@
                 <span>About Us</span>
             </div>
             <span class="by-eyebrow">Who we are</span>
-            <h1>About Buyora</h1>
+            <h1>About {{ $setting->website_name ?? 'Buyora' }}</h1>
             <p>Your cheerful everyday online marketplace in Bangladesh, making shopping simpler and more delightful.</p>
         </div>
     </div>
@@ -21,12 +21,12 @@
             <div class="row justify-content-center">
                 <div class="col-lg-10">
                     <div class="p-4 p-md-5 bg-white rounded-4 border">
-                        <h2 class="h3 fw-bold mb-3">Welcome to Buyora</h2>
+                        <h2 class="h3 fw-bold mb-3">Welcome to {{ $setting->website_name ?? 'Buyora' }}</h2>
                         <p class="text-secondary mb-4" style="line-height: 1.7; font-size: 1.05rem;">
-                            Buyora is an everyday online marketplace in Bangladesh dedicated to bringing you quality products across diverse categories. We focus on delivering value, convenience, and a seamless shopping experience for customers across the country.
+                            {{ $setting->website_name ?? 'Buyora' }} is an everyday online marketplace in Bangladesh dedicated to bringing you quality products across diverse categories. We focus on delivering value, convenience, and a seamless shopping experience for customers across the country.
                         </p>
                         <p class="text-secondary mb-4" style="line-height: 1.7; font-size: 1.05rem;">
-                            Whether you are exploring daily essentials, fashion, or modern electronics, Buyora offers an easy-to-browse selection with prompt nationwide delivery, secure checkout methods, and dedicated customer support whenever you need assistance.
+                            Whether you are exploring daily essentials, fashion, or modern electronics, {{ $setting->website_name ?? 'Buyora' }} offers an easy-to-browse selection with prompt nationwide delivery, secure checkout methods, and dedicated customer support whenever you need assistance.
                         </p>
 
                         <div class="row g-3 g-md-4 pt-3">

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Buyora — Everyday finds, a little more joyful')
+@section('title', ($setting->website_name ?? 'Buyora') . ' — Everyday finds, a little more joyful')
 
 @section('content')
 
@@ -152,7 +152,7 @@
     <section class="by-section">
         <div class="container">
             <div class="by-section-head by-section-head--center">
-                <span class="by-eyebrow">Why shop with Buyora</span>
+                <span class="by-eyebrow">Why shop with {{ $setting->website_name ?? 'Buyora' }}</span>
                 <h2>A marketplace that feels good</h2>
                 <p>Friendly service, carefully chosen products and a checkout that stays out of your way.</p>
             </div>
@@ -189,7 +189,7 @@
             <div class="by-cta">
                 <span class="by-eyebrow by-eyebrow--ink">Join the fun</span>
                 <h2>Thousands of happy shoppers, one cheerful place.</h2>
-                <p>Discover exclusive deals and experience effortless online shopping with Buyora.</p>
+                <p>Discover exclusive deals and experience effortless online shopping with {{ $setting->website_name ?? 'Buyora' }}.</p>
                 <a href="{{ url('/collections') }}" class="btn btn-dark btn-lg">
                     Start shopping <i class="fa-solid fa-shopping-bag"></i>
                 </a>

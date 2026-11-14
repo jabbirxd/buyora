@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('title')
-Buyora
+{{ $setting->website_name ?? 'Buyora' }}
 @endsection
 
 @section('content')
