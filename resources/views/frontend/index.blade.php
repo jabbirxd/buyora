@@ -141,8 +141,8 @@
                     <h2>New season, new favourites.</h2>
                     <p>Discover fresh arrivals, playful accessories and everyday essentials — all picked to brighten your week.</p>
                 </div>
-                <a href="{{ url('/new-arrivals') }}" class="btn btn-dark btn-lg">
-                    Explore new arrivals <i class="fa-solid fa-arrow-right"></i>
+                <a href="{{ url('/collections/trending') }}" class="btn btn-dark btn-lg">
+                    Trending Now <i class="fa-solid fa-arrow-right"></i>
                 </a>
             </div>
         </div>
