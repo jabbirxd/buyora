@@ -11,7 +11,7 @@
             @endif
             <div class="card">
                 <div class="card-header">
-                    <h3>Users List
+                    <h3>Users List{{ request('role') === 'user' ? ' (Users only)' : (request('role') === 'admin' ? ' (Admins only)' : '') }}
                         <a href="{{ route('admin.users.create') }}" class="btn btn-primary btn-sm text-white float-end">
                             Add User</a>
                     </h3>

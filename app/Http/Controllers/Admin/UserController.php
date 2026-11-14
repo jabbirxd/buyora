@@ -12,9 +12,15 @@ class UserController extends Controller
     /**
      * Display a listing of the users.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::paginate(10);
+        $query = User::query();
+        if ($request->query('role') === 'user') {
+            $query->where('roll_as', '0');
+        } elseif ($request->query('role') === 'admin') {
+            $query->where('roll_as', '1');
+        }
+        $users = $query->paginate(10)->withQueryString();
         return view('admin.users.index', compact('users'));
     }
 

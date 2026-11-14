@@ -80,7 +80,7 @@
                 <div class="card card-body bg-success text-white mb-3">
                   <label>Users</label>
                   <h1>{{$totalUser}}</h1>
-                  <a href="{{url('admin/users')}}" class="text-white">View</a>
+                  <a href="{{url('admin/users?role=user')}}" class="text-white">View</a>
                 </div>
               </div>
 
@@ -88,7 +88,7 @@
                 <div class="card card-body bg-danger text-white mb-3">
                   <label>Admin</label>
                   <h1>{{$totalAdmin}}</h1>
-                  <a href="{{url('admin/users')}}" class="text-white">View</a>
+                  <a href="{{url('admin/users?role=admin')}}" class="text-white">View</a>
                 </div>
               </div>
             </div>
